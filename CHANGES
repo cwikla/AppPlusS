@@ -1,0 +1,166 @@
+
+/* $Id: CHANGES,v 1.22 1996/04/21 16:58:53 cwikla Exp $ */
+
+Added SubPlusS.[ch] for popup/menu shells.
+Got rid of extraneous variables
+
+Added <Xm/Xm.h> for -DMOTIF so that XmREVISON would exist!
+
+
+Fixed check if there is a good default depth and the visualClass
+is not set, it would try to match a visual class of -1.
+
+
+Fixed SubPlus.c XtPlusCreatePopup[Shell/Menu] where I was
+accessing the wrong indexes of the incoming Args.
+Thanks to Kensaku MORI (mori@eagle.toriwaki.nuie.nagoya-u.ac.jp)
+
+Mon Jan 30 11:38:47 CST 1995
+
+Added XCC library.
+
+Mon Jan 30 13:32:10 CST 1995
+
+
+Fixed screwed up direct color/true color
+
+Mon Jan 30 14:17:55 CST 1995
+
+
+Fixed screwed up standard colormap atom
+
+Mon Jan 30 14:49:45 CST 1995
+
+Fix bit count for _initDirect
+
+Tue Jan 31 17:02:28 CST 1995
+
+Fix _atom in _lookForStdCmap to ColorAtomList/GrayAtomList
+
+
+Wed Feb  1 18:55:32 CST 1995
+
+Moved the XCC to the class part where it belongs.
+Added some #ifdef HAS_XCC
+
+Fri Feb  3 12:07:32 CST 1995
+
+Check for red_max/green_max/blue_max to avoid divide by 0;
+
+
+Tue Feb  7 11:14:45 CST 1995
+
+
+Fix from Anre Olav Morken (Arne.Morken@ii.uib.no)
+variable "cubes" was not initialized and may be doing bogus
+frees.
+
+Tue Feb  7 13:23:28 CST 1995
+
+Added XCCGetColormap function
+made converters static
+
+
+
+Sun Feb 12 12:32:36 CST 1995
+
+
+Changed example program
+Set background_pixel, and border_color to 0 in AppPlusS.c realize proc.
+Did same in SubPlus.c
+
+Thu Feb 16 21:59:48 CST 1995
+
+Fixed dinc in _initGray routine.
+
+Tue Mar 14 12:11:19 CST 1995
+
+Added New public routines:
+
+extern XCC XCCMonoCreate(Display *_dpy, Visual *_visual, Colormap _colormap);
+extern Display *XCCGetDisplay(XCC _xcc);
+extern int XCCQueryColor(XCC _xcc, XColor *_color);
+
+
+Thu Apr  6 12:56:55 CDT 1995
+
+Fix/Hack for improper RGB_GRAY_MAP's that use/don't use green/blue max
+
+Wed Apr 12 21:39:22 CDT 1995
+
+
+Fixed numColors for standard colormaps
+New demo program
+
+Thu Apr 20 23:04:54 CDT 1995
+
+Made Mono screens always use MODE_BW
+
+Sat May 13 22:00:52 CDT 1995
+
+From Daniel Fu (daniel@cs.uchicago.edu)
+
+void  XCCFree(XCC _xcc)
+ADDED:  XFree(_xcc->visualInfo);
+
+void _initGray(XCC _xcc)
+CHANGED:  _xcc->stdCmap.red_max = _xcc->numColors-1;
+
+Mon May 15 12:10:46 CDT 1995
+
+
+Fixed typo
+
+
+
+Tue May 16 14:13:50 CDT 1995
+
+
+Finally!!!! DirectColor is now correct!!!! I was
+not using the CLUT like I should have been (what was
+I thinking?)
+
+
+Fri Aug  4 12:45:21 CDT 1995
+
+Added XCCQueryColor/XCCQueryColors().  Now does local querying
+of colors if possible.
+
+Wed Aug  9 23:06:56 CDT 1995
+
+
+Fixed XCCQueryColors() which was still calling XQueryColor()
+
+Sat Aug 12 13:31:14 CDT 1995
+
+Fixed XCCQueryColors not increment tc pointer.
+
+Fri Oct 27 14:18:19 CDT 1995
+
+Fixed a problem where a standard colormap could exist, the visual id
+could be right, but a colormap already exists that is NOT the default.
+
+Wed Nov 29 16:19:16 CST 1995
+
+Fixed a == NULL to != NULL, that was keeping the AppPlusS from finding
+the deepest depth visual.
+
+
+Fri Apr 19 10:57:45 CDT 1996
+
+Bugs fixed from bsletten@autometric.com reports:
+
+Now send passed in args for SubPlusS.c to both MenuShell and RowColumn.
+This was making tear-off-menus not work.
+
+Made the XCC not do a queryColors malloc if the depth > 12. This could happen
+apparantly on a TrueColor/DirectColor visual which is bad.
+
+Fri Apr 19 11:56:09 CDT 1996
+
+Arg. Real fix for SubPlusS.c...
+
+Sun Apr 21 11:52:35 CDT 1996
+
+Subtracted 1 for number of args when concatanating args passes in.
+Removed XmNborderColor and XmNbackgroundColor settings. 

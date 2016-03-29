@@ -1,0 +1,111 @@
+
+			AppPlusShell Widget
+----------------------------------------------------------------------
+
+
+From the Xt FAQ:
+
+----------------------------------------------------------------------
+4.  How do I use a different visual than the default?
+----------------------------------------------------------------------
+
+This requires a more complicated answer than it should.  A window has
+three things that are visual specific -- the visual, colormap and
+border pixmap.  All widgets have their own Colormap and BorderPixmap
+resource; only shell widgets have Visual resources (another questions
+deals with why shells have a Visual).  The default value of these
+resources is CopyFromParent which does exactly what it says.  In the
+shell widget CopyFromParent gets evalulated as DefaultVisualOfScreen
+and DefaultColormapOfScreen.  When any one of the three resources is
+not properly set, a BadMatch error occurs when the window is
+created.  They are not properly set because each of the values depends
+on the visual being used.
+
+How to get this to work?  There are two parts to the answer.  The
+first is if you want an application to start with a particular visual
+and the second is if you want a particular shell within an application
+to start with a different visual.  The second is actually easier
+because the basic information you need is available.  The first is a
+little harder because you'll need to initialize much of the toolkit
+yourself in order to determine the needed information.
+
+----------------------------------------------------------------------
+
+
+	This doesn't seem like the correct solution to me.  First, its
+not reusable, and second it's not user configurable thru resources.  
+This was the inspiration behind the AppPlusShell widget.  
+
+	The AppPlusShell adds the following to the application shell:
+
+1) Visual/Colormap control thru resources
+2) EditRes built in (can be turned on/off)
+3) Catches the WM_DELETE_WINDOW
+
+	It does this thru the following added resources:
+
+For 1:
+XtNvisualClass
+XtNusePrivateColormap
+XtNvisualID
+XtNapplicationDepth
+
+For 2:
+XtNallowEditRes
+
+For 3:
+XtNsaveYourselfCallback
+
+
+
+	The algorithm is as follows, in this order:
+
+1) if XtNvisualID is set try to use the visual with this id, if
+it exists.
+
+2) if XtNapplicationDepth is set try to find a visual with 
+that depth, otherwise set it to DefaultDepth().  This allows 
+users to have:
+
+*applicationDepth: 24
+
+which will be used if it exists.  XtNapplicationDepth is needed
+instead of XtNdepth, since, IMO, most users will want to do
+
+*depth: 24 
+
+which would screw up for any subwidgets if there were no visual
+with a depth of 24.  Note that the depth gets correctly set in the 
+initialize too.
+
+3) if XtNvisualClass is set then find the visual with the that
+class and the greatest depth.
+
+4) if all else fails use the default visual/default depth.
+
+5a) if he visualID == default visual id, and XtNusePrivateColormap
+is FALSE, then use the default colormap, otherwise, create an
+appropriate one.
+
+5b) If the XCC library is in use, it would call the XCC lib
+at this point instead.
+
+	Plus, there is now a file called SubPlusS.c that containts
+functions for creating popup/menu shells with the correct
+visuals/colormaps/depths.
+
+
+	The only other thing of interest is if you define MOTIF
+the code uses some Motif functions instead of their X/Xt
+equivalents, but otherwise should work with pretty much any
+Xt widget set.
+
+	I use a version of this code in our product, and so it has
+been used on just about every major U*x platform with success.
+
+	Let me know what you think...(Otherwise I'll stop writing this
+stuff...Well, after I finish this next one, then that's it..., Yeah,
+that's it...)
+
+	John L. Cwikla
+	cwikla@wri.com

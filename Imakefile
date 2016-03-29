@@ -1,0 +1,13 @@
+SYS_LIBRARIES= $(XMLIB) $(XMULIB) $(XTOOLLIB) $(XLIB)
+
+CFLAGS =-g -DHAS_XCC -DMOTIF
+
+SRCS= AppPlusST.c AppPlusS.c SubPlusS.c XCC.c 
+OBJS= AppPlusST.o AppPlusS.o SubPlusS.o XCC.o
+PROGRAM= AppPlusST 
+
+ComplexProgramTarget(AppPlusST)
+
+XCC.c: XCCP.h XCC.h
+
+depend:: AppPlusSP.h AppPlusS.h 
